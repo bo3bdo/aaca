@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "AAC",
+    "slug": "aac-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "aacapp",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.example.aac",
+      "permissions": []
+    },
+    "extra": {
+      "eas": {
+        "projectId": "replace-with-project-id"
+      }
+    }
+  }
+}
