@@ -1,0 +1,26 @@
+{
+  "categories": [
+    { "id": "core", "nameAr": "كلمات أساسية", "nameEn": "Core", "order": 0 },
+    { "id": "actions", "nameAr": "أفعال", "nameEn": "Actions", "order": 1 },
+    { "id": "people", "nameAr": "أشخاص", "nameEn": "People", "order": 2 },
+    { "id": "food", "nameAr": "طعام", "nameEn": "Food", "order": 3 },
+    { "id": "feelings", "nameAr": "مشاعر", "nameEn": "Feelings", "order": 4 }
+  ],
+  "cards": [
+    { "id": "i", "labelAr": "أنا", "labelEn": "I", "categoryId": "core", "iconName": "person", "color": "#FAD02E", "isCore": true },
+    { "id": "you", "labelAr": "أنت", "labelEn": "You", "categoryId": "core", "iconName": "person-outline", "color": "#F38181", "isCore": true },
+    { "id": "want", "labelAr": "أريد", "labelEn": "Want", "categoryId": "core", "iconName": "hand-point-up", "color": "#95E1D3", "isCore": true },
+    { "id": "go", "labelAr": "أذهب", "labelEn": "Go", "categoryId": "core", "iconName": "arrow-right", "color": "#A8E6CF", "isCore": true },
+    { "id": "eat", "labelAr": "آكل", "labelEn": "Eat", "categoryId": "food", "iconName": "utensils", "color": "#FFD3B6", "isCore": true },
+    { "id": "drink", "labelAr": "أشرب", "labelEn": "Drink", "categoryId": "food", "iconName": "tint", "color": "#99B898", "isCore": true },
+    { "id": "water", "labelAr": "ماء", "labelEn": "Water", "categoryId": "food", "iconName": "tint", "color": "#6DD5FA", "isCore": true },
+    { "id": "juice", "labelAr": "عصير", "labelEn": "Juice", "categoryId": "food", "iconName": "wine-glass", "color": "#F8B195" },
+    { "id": "mother", "labelAr": "أمي", "labelEn": "Mom", "categoryId": "people", "iconName": "female", "color": "#F67280" },
+    { "id": "father", "labelAr": "أبي", "labelEn": "Dad", "categoryId": "people", "iconName": "male", "color": "#C06C84" },
+    { "id": "teacher", "labelAr": "معلم", "labelEn": "Teacher", "categoryId": "people", "iconName": "chalkboard-teacher", "color": "#355C7D" },
+    { "id": "happy", "labelAr": "سعيد", "labelEn": "Happy", "categoryId": "feelings", "iconName": "smile", "color": "#F8B195" },
+    { "id": "sad", "labelAr": "حزين", "labelEn": "Sad", "categoryId": "feelings", "iconName": "frown", "color": "#355C7D" },
+    { "id": "play", "labelAr": "ألعب", "labelEn": "Play", "categoryId": "actions", "iconName": "futbol", "color": "#8EC5FC" },
+    { "id": "help", "labelAr": "مساعدة", "labelEn": "Help", "categoryId": "actions", "iconName": "hands-helping", "color": "#FFB88C" }
+  ]
+}
