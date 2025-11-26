@@ -10,6 +10,7 @@ const defaultSettings: SettingsState = {
   useTTS: true,
   largeButtons: false,
   theme: 'light',
+  language: 'ar',
 };
 
 const withTimestamps = (card: Omit<Card, 'createdAt' | 'updatedAt'>): Card => {
@@ -32,7 +33,11 @@ export const seedAppData = (): AppData => {
 export const loadAppData = async (): Promise<AppData> => {
   const stored = await AsyncStorage.getItem(STORAGE_KEY);
   if (stored) {
-    return JSON.parse(stored) as AppData;
+    const parsed = JSON.parse(stored) as AppData;
+    if (!parsed.settings.language) {
+      parsed.settings.language = defaultSettings.language;
+    }
+    return parsed;
   }
   const seeded = seedAppData();
   await saveAppData(seeded);

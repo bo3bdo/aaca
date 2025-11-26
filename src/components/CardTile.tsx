@@ -10,9 +10,11 @@ interface Props {
   onLongPress?: () => void;
   showEnglish: boolean;
   large?: boolean;
+  isRTL?: boolean;
 }
 
-export const CardTile: React.FC<Props> = ({ card, onPress, onLongPress, showEnglish, large }) => {
+export const CardTile: React.FC<Props> = ({ card, onPress, onLongPress, showEnglish, large, isRTL }) => {
+  const direction = isRTL ? styles.rtl : styles.ltr;
   return (
     <TouchableOpacity
       accessibilityRole="button"
@@ -29,8 +31,8 @@ export const CardTile: React.FC<Props> = ({ card, onPress, onLongPress, showEngl
           <Ionicons name="image" size={36} color={palette.muted} />
         )}
       </View>
-      <Text style={styles.labelAr}>{card.labelAr}</Text>
-      {showEnglish && !!card.labelEn && <Text style={styles.labelEn}>{card.labelEn}</Text>}
+      <Text style={[styles.labelAr, direction]}>{card.labelAr}</Text>
+      {showEnglish && !!card.labelEn && <Text style={[styles.labelEn, direction]}>{card.labelEn}</Text>}
     </TouchableOpacity>
   );
 };
@@ -71,11 +73,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: palette.text,
     textAlign: 'center',
-    writingDirection: 'rtl',
   },
   labelEn: {
     fontSize: 14,
     color: palette.muted,
     textAlign: 'center',
+  },
+  rtl: {
+    writingDirection: 'rtl',
+  },
+  ltr: {
+    writingDirection: 'ltr',
   },
 });

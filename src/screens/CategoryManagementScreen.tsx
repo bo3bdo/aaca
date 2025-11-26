@@ -3,9 +3,11 @@ import { FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, 
 import { useAppData } from '../context/AppDataContext';
 import { palette } from '../constants/colors';
 import { Category } from '../models/types';
+import { useLocale } from '../hooks/useLocale';
 
 export const CategoryManagementScreen: React.FC = () => {
   const { data, upsertCategory, removeCategory, createId } = useAppData();
+  const { t, isRTL } = useLocale();
   const [nameAr, setNameAr] = useState('');
   const [nameEn, setNameEn] = useState('');
 
@@ -30,12 +32,24 @@ export const CategoryManagementScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.formRow}>
-        <TextInput style={styles.input} placeholder="اسم التصنيف" value={nameAr} onChangeText={setNameAr} textAlign="right" />
-        <TextInput style={styles.input} placeholder="English" value={nameEn} onChangeText={setNameEn} />
+    <SafeAreaView style={[styles.container, isRTL ? styles.rtl : styles.ltr]}>
+      <View style={[styles.formRow, isRTL ? styles.formRowRtl : null, isRTL ? styles.rtl : styles.ltr]}>
+        <TextInput
+          style={[styles.input, isRTL ? styles.inputRtl : styles.inputLtr]}
+          placeholder={t('categoryName')}
+          value={nameAr}
+          onChangeText={setNameAr}
+          textAlign={isRTL ? 'right' : 'left'}
+        />
+        <TextInput
+          style={[styles.input, isRTL ? styles.inputRtl : styles.inputLtr]}
+          placeholder={t('categoryEnglish')}
+          value={nameEn}
+          onChangeText={setNameEn}
+          textAlign={isRTL ? 'right' : 'left'}
+        />
         <TouchableOpacity style={styles.addBtn} onPress={addCategory} accessibilityRole="button">
-          <Text style={{ color: '#fff' }}>إضافة</Text>
+          <Text style={{ color: '#fff' }}>{t('add')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -43,9 +57,9 @@ export const CategoryManagementScreen: React.FC = () => {
         data={[...data.categories].sort((a, b) => a.order - b.order)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.row}>
+          <View style={[styles.row, isRTL ? styles.rowRtl : null, isRTL ? styles.rtl : styles.ltr]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{item.nameAr}</Text>
+              <Text style={[styles.name, isRTL ? styles.inputRtl : styles.inputLtr]}>{item.nameAr}</Text>
               {item.nameEn && <Text style={styles.sub}>{item.nameEn}</Text>}
             </View>
             <View style={styles.actions}>
@@ -56,7 +70,7 @@ export const CategoryManagementScreen: React.FC = () => {
                 <Text>▼</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.smallBtn, { backgroundColor: '#FFCDD2' }]} onPress={() => removeCategory(item.id)}>
-                <Text style={{ color: '#B71C1C' }}>حذف</Text>
+                <Text style={{ color: '#B71C1C' }}>{t('delete')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -74,10 +88,19 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: palette.background,
   },
+  rtl: {
+    writingDirection: 'rtl',
+  },
+  ltr: {
+    writingDirection: 'ltr',
+  },
   formRow: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+  },
+  formRowRtl: {
+    flexDirection: 'row-reverse',
   },
   input: {
     flex: 1,
@@ -93,11 +116,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   row: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 12,
     borderRadius: 12,
+  },
+  rowRtl: {
+    flexDirection: 'row-reverse',
   },
   name: {
     fontSize: 16,
@@ -115,5 +141,13 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#F5F5F5',
     borderRadius: 10,
+  },
+  inputRtl: {
+    textAlign: 'right',
+    writingDirection: 'rtl',
+  },
+  inputLtr: {
+    textAlign: 'left',
+    writingDirection: 'ltr',
   },
 });

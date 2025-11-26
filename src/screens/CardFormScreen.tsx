@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Audio } from 'expo-av';
@@ -8,11 +8,13 @@ import { useAppData } from '../context/AppDataContext';
 import { Card } from '../models/types';
 import { palette } from '../constants/colors';
 import { Picker } from '@react-native-picker/picker';
+import { useLocale } from '../hooks/useLocale';
 
 export const CardFormScreen: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootStackParamList, 'CardForm'>>();
   const { data, upsertCard, createId } = useAppData();
+  const { t, isRTL } = useLocale();
   const editingCard = data?.cards.find((c) => c.id === route.params?.cardId);
 
   const [labelAr, setLabelAr] = useState(editingCard?.labelAr ?? '');
@@ -24,6 +26,11 @@ export const CardFormScreen: React.FC = () => {
   const [audioUri, setAudioUri] = useState<string | undefined>(editingCard?.audioUri);
   const recording = useRef<Audio.Recording | null>(null);
   const [recordingStatus, setRecordingStatus] = useState<string>('');
+  const directionStyle = isRTL ? styles.inputRtl : styles.inputLtr;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: t('cardFormTitle') });
+  }, [navigation, t]);
 
   useEffect(() => {
     return () => {
@@ -69,7 +76,7 @@ export const CardFormScreen: React.FC = () => {
 
   const saveCard = async () => {
     if (!labelAr.trim()) {
-      Alert.alert('مطلوب', 'يجب إدخال الاسم بالعربية');
+      Alert.alert('', t('requiredArLabel'));
       return;
     }
     const now = Date.now();
@@ -93,54 +100,75 @@ export const CardFormScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.label}>الاسم بالعربية *</Text>
-        <TextInput style={styles.input} value={labelAr} onChangeText={setLabelAr} placeholder="مثال: ماء" textAlign="right" />
+        <Text style={[styles.label, directionStyle]}>{t('arName')}</Text>
+        <TextInput
+          style={[styles.input, isRTL ? styles.inputRtl : styles.inputLtr]}
+          value={labelAr}
+          onChangeText={setLabelAr}
+          placeholder={t('arName')}
+          textAlign={isRTL ? 'right' : 'left'}
+        />
 
-        <Text style={styles.label}>الاسم بالإنجليزية</Text>
-        <TextInput style={styles.input} value={labelEn} onChangeText={setLabelEn} placeholder="Optional" textAlign="right" />
+        <Text style={[styles.label, directionStyle]}>{t('enName')}</Text>
+        <TextInput
+          style={[styles.input, isRTL ? styles.inputRtl : styles.inputLtr]}
+          value={labelEn}
+          onChangeText={setLabelEn}
+          placeholder={t('enName')}
+          textAlign={isRTL ? 'right' : 'left'}
+        />
 
-        <Text style={styles.label}>التصنيف</Text>
+        <Text style={[styles.label, directionStyle]}>{t('categoryName')}</Text>
         <View style={styles.pickerWrapper}>
-          <Picker selectedValue={categoryId} onValueChange={(val) => setCategoryId(val.toString())} style={{ direction: 'rtl' }}>
+          <Picker
+            selectedValue={categoryId}
+            onValueChange={(val) => setCategoryId(val.toString())}
+            style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+          >
             {data?.categories.map((cat) => (
               <Picker.Item key={cat.id} label={cat.nameAr} value={cat.id} />
             ))}
           </Picker>
         </View>
 
-        <View style={styles.rowBetween}>
-          <Text style={styles.label}>كلمة أساسية</Text>
+        <View style={[styles.rowBetween, isRTL ? styles.rowRtl : styles.rowLtr]}>
+          <Text style={[styles.label, directionStyle]}>{t('coreWord')}</Text>
           <Switch value={isCore} onValueChange={setIsCore} />
         </View>
 
-        <Text style={styles.label}>اللون</Text>
-        <TextInput style={styles.input} value={color} onChangeText={setColor} placeholder="#FFF8E1" />
+        <Text style={[styles.label, directionStyle]}>{t('color')}</Text>
+        <TextInput
+          style={[styles.input, isRTL ? styles.inputRtl : styles.inputLtr]}
+          value={color}
+          onChangeText={setColor}
+          placeholder="#FFF8E1"
+        />
 
-        <Text style={styles.label}>الصورة</Text>
-        <View style={styles.rowBetween}>
+        <Text style={[styles.label, directionStyle]}>{t('image')}</Text>
+        <View style={[styles.rowBetween, isRTL ? styles.rowRtl : styles.rowLtr]}>
           <TouchableOpacity style={styles.smallBtn} onPress={pickImage}>
-            <Text>من المعرض</Text>
+            <Text>{t('pickFromGallery')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.smallBtn} onPress={takePhoto}>
-            <Text>التقاط صورة</Text>
+            <Text>{t('takePhoto')}</Text>
           </TouchableOpacity>
         </View>
         {imageUri && <Image source={{ uri: imageUri }} style={styles.preview} />}
 
-        <Text style={styles.label}>تسجيل صوت مخصص</Text>
-        <View style={styles.rowBetween}>
+        <Text style={[styles.label, directionStyle]}>{t('recordAudio')}</Text>
+        <View style={[styles.rowBetween, isRTL ? styles.rowRtl : styles.rowLtr]}>
           <TouchableOpacity style={styles.smallBtn} onPress={startRecording}>
-            <Text>بدء التسجيل</Text>
+            <Text>{t('startRecording')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.smallBtn} onPress={stopRecording}>
-            <Text>إيقاف</Text>
+            <Text>{t('stop')}</Text>
           </TouchableOpacity>
         </View>
         {!!recordingStatus && <Text style={styles.status}>{recordingStatus}</Text>}
-        {audioUri && <Text style={styles.status}>تم حفظ التسجيل</Text>}
+        {audioUri && <Text style={styles.status}>{t('customRecordingSaved')}</Text>}
 
         <TouchableOpacity style={styles.saveBtn} onPress={saveCard} accessibilityRole="button">
-          <Text style={styles.saveText}>حفظ</Text>
+          <Text style={styles.saveText}>{t('save')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -159,7 +187,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    writingDirection: 'rtl',
   },
   input: {
     backgroundColor: '#fff',
@@ -175,9 +202,20 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
   },
   rowBetween: {
-    flexDirection: 'row-reverse',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  rowRtl: {
+    flexDirection: 'row-reverse',
+  },
+  rowLtr: {
+    flexDirection: 'row',
+  },
+  inputRtl: {
+    writingDirection: 'rtl',
+  },
+  inputLtr: {
+    writingDirection: 'ltr',
   },
   smallBtn: {
     backgroundColor: '#fff',
