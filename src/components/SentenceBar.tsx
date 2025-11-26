@@ -4,30 +4,35 @@ import { Ionicons } from '@expo/vector-icons';
 import { PhraseWord } from '../models/types';
 import { palette } from '../constants/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useLocale } from '../hooks/useLocale';
 
 interface Props {
   words: PhraseWord[];
   onRemoveLast: () => void;
   onClear: () => void;
   onSpeak: () => void;
+  showEnglish: boolean;
 }
 
-export const SentenceBar: React.FC<Props> = ({ words, onRemoveLast, onClear, onSpeak }) => {
+export const SentenceBar: React.FC<Props> = ({ words, onRemoveLast, onClear, onSpeak, showEnglish }) => {
+  const { t, isRTL } = useLocale();
+  const directionStyle = isRTL ? styles.textRtl : styles.textLtr;
   return (
-    <View style={styles.container}>
-      <View style={styles.wordsArea}>
+    <View style={[styles.container, isRTL ? styles.rowRtl : styles.rowLtr]}>
+      <View style={[styles.wordsArea, isRTL ? styles.rowRtl : styles.rowLtr]}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.wordsContent}>
           {words.map((w) => (
-            <Text key={w.cardId + w.labelAr} style={styles.word}>
-              {w.labelAr}
-            </Text>
+            <View key={w.cardId + w.labelAr} style={[styles.word, directionStyle]}>
+              <Text style={[styles.wordText, directionStyle]}>{w.labelAr}</Text>
+              {showEnglish && !!w.labelEn && <Text style={styles.wordEn}>{w.labelEn}</Text>}
+            </View>
           ))}
         </ScrollView>
       </View>
-      <View style={styles.actions}>
-        <IconButton icon="arrow-undo" label="تراجع" onPress={onRemoveLast} />
-        <IconButton icon="trash" label="حذف" onPress={onClear} />
-        <IconButton icon="volume-high" label="نطق" onPress={onSpeak} primary />
+      <View style={[styles.actions, isRTL ? styles.rowRtl : styles.rowLtr]}>
+        <IconButton icon="arrow-undo" label={t('undo')} onPress={onRemoveLast} />
+        <IconButton icon="trash" label={t('clear')} onPress={onClear} />
+        <IconButton icon="volume-high" label={t('speak')} onPress={onSpeak} primary />
       </View>
     </View>
   );
@@ -50,9 +55,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 10,
-    flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  rowRtl: {
+    flexDirection: 'row-reverse',
+  },
+  rowLtr: {
+    flexDirection: 'row',
   },
   wordsArea: {
     flex: 1,
@@ -67,8 +77,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   word: {
-    fontSize: 20,
-    writingDirection: 'rtl',
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -76,8 +84,18 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
     borderWidth: 1,
   },
+  wordText: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  wordEn: {
+    fontSize: 14,
+    color: palette.muted,
+    textAlign: 'center',
+  },
+  textRtl: { writingDirection: 'rtl' },
+  textLtr: { writingDirection: 'ltr' },
   actions: {
-    flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },

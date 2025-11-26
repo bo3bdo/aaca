@@ -5,6 +5,7 @@ A cross-platform AAC (Augmentative & Alternative Communication) app for Arabic-s
 ## Features
 - RTL-first communication board with sentence bar, large card grid, and category bar
 - Arabic Text-to-Speech with fallback to custom recorded audio per card
+- Bilingual UI toggle (Arabic/English) that flips layout RTL/LTR and shows optional English labels
 - Caregiver tools to add/edit/delete cards and categories, reorder categories, and toggle accessibility settings
 - Local persistence using AsyncStorage with seed data in `assets/seedData.json`
 

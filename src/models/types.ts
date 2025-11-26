@@ -31,6 +31,7 @@ export interface SettingsState {
   useTTS: boolean;
   largeButtons: boolean;
   theme: 'light' | 'dark';
+  language: 'ar' | 'en';
 }
 
 export interface AppData {
